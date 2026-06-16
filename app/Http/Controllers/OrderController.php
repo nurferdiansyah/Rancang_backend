@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Cart;
+use App\Models\Notification;
 
 class OrderController extends Controller
 {
@@ -66,6 +67,13 @@ class OrderController extends Controller
         }
 
         Cart::where('user_id', $request->user()->id)->delete();
+        Notification::create([
+            'user_id' => $request->user()->id,
+            'title' => 'Pesanan Berhasil',
+            'message' => 'Pesanan #' . $order->id . ' berhasil dibuat',
+            'type' => 'order',
+            'is_read' => 0,
+        ]);
 
         return response()->json([
             'status'  => 'success',
